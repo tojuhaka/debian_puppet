@@ -1,45 +1,18 @@
 class python{
-  exec { "/tmp/distribute-0.6.45.tar.gz":
-    command => "curl -O http://pypi.python.org/packages/source/d/distribute/distribute-0.6.45.tar.gz -L",
-    creates => "/tmp/distribute-0.6.45.tar.gz",
-    cwd => "/tmp",
-    path => ["/usr/bin"]
-  }
-
-  exec { "/tmp/distribute-0.6.45":
-    command => "tar xzvf distribute-0.6.45.tar.gz",
-    creates => "/tmp/distribute-0.6.45",
-    cwd => "/tmp",
-    path => ["/bin", "/usr/bin"],
-    require => [
-      Exec["/tmp/distribute-0.6.45.tar.gz"]
-    ]
-  }
-
-  exec { "distribute":
-    command => "python setup.py install",
-    creates => "/usr/bin/easy_install",
-    cwd => "/tmp/distribute-0.6.45",
-    path => ["/usr/bin"],
-    require => [
-      Exec["/tmp/distribute-0.6.45"],
-    ]
-  }
-
   exec { "pip":
     command => "easy_install pip",
-    creates => "/usr/local/bin/pip",
+    creates => "/usr/local/pip",
     path => ["/usr/bin"],
-    require => [
-      Exec["distribute"]
-    ]
+    require => Class["essential"]
   }
 
-  exec { "/usr/local/bin/pip install -U distribute":
-    onlyif => "test `/usr/bin/pip list | grep -c 'distribute (0.6.45)'` -eq 1",
-    path => ["/bin", "/usr/bin"],
-    require => [
-      Exec["pip"]
-    ]
+file {"/usr/local/virtualenvs":
+    ensure => "directory"
+  }
+  exec { "virtualenv":
+    command => "pip install virtualenv",
+    onlyif => "test `pip list | grep -c virtualenv` -eq 0",
+    path => ["/bin", "/usr/bin", "/usr/local/bin"],
+    require => Exec["pip"],
   }
 }
