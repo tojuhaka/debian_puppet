@@ -28,14 +28,14 @@ class python{
 
   exec { "pip":
     command => "easy_install pip",
-    creates => "/usr/bin/pip",
+    creates => "/usr/local/bin/pip",
     path => ["/usr/bin"],
     require => [
       Exec["distribute"]
     ]
   }
 
-  exec { "/usr/bin/pip install -U distribute":
+  exec { "/usr/local/bin/pip install -U distribute":
     onlyif => "test `/usr/bin/pip list | grep -c 'distribute (0.6.45)'` -eq 1",
     path => ["/bin", "/usr/bin"],
     require => [

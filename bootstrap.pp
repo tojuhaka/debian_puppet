@@ -1,4 +1,4 @@
-include uwsgi
 include python
+include uwsgi
 include essential
 
