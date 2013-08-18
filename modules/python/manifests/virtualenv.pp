@@ -1,6 +1,6 @@
-python::virtualenv(
+define python::virtualenv (
   $virtualenv = "/usr/local/bin/virtualenv",
-  $packages = ["python-ldap", "PIL"],
+  $packages = ["PIL"],
   $python_ldap = "https://jyuplone.cc.jyu.fi/packages/python-ldap-2.3.12.tar.gz"
 ){
   exec { "${virtualenv} ${name}":
@@ -29,13 +29,11 @@ python::virtualenv(
     }
   }
   if "PIL" in $packages {
-    exec { "${name}/bin/pip install Pillow":
+    exec { "${name}/bin/pip install PIL":
       onlyif => "test `${name}/bin/pip list | grep -c Pillow` -eq 0",
       path => ["/bin", "/usr/bin", "/usr/local/bin"],
       require => [
         Exec["${virtualenv} ${name}"],
-        Package["zlib-devel"],
-        Package["libjpeg-turbo-devel"]
       ]
     }
   }
