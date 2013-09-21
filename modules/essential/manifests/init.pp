@@ -8,4 +8,11 @@ class essential {
 		ensure => "installed",
 		require => Exec["apt-get update"]
 	}
+
+	
+	file { "/var/pyramid":
+    		ensure => "directory",
+		owner => "root",
+		mode => 750
+	}
 }
